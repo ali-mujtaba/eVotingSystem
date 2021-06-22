@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
-
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { candidates: [], web3: null, accounts: null, contract: null };
 
   componentDidMount = async () => {
     try {
@@ -13,13 +12,20 @@ class App extends Component {
       const web3 = await getWeb3();
 
       // Use web3 to get the user's accounts.
+      // const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
       const accounts = await web3.eth.getAccounts();
-
+      console.log("Accounts App: "+accounts);
+      
       // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const networkId = await window.ethereum.networkVersion;
+      console.log("Chain ID: ",networkId);
+      
+      const deployedNetwork = ElectionContract.networks[networkId];
+      console.log("Deployed Contract Network: ",deployedNetwork,deployedNetwork.address);
+
+      // creating contract object to interact with smart contract like a JS object
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        ElectionContract.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
@@ -38,23 +44,28 @@ class App extends Component {
   runExample = async () => {
     const { accounts, contract } = this.state;
 
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+    console.log("Accounts: ",accounts);
+    let candidatesCount = await contract.methods.candidatesCount().call();
+    console.log("Candidates Count: ",candidatesCount);
+    let candidatesList=[];
+    for(let i=1;i<=2;i++){
+      candidatesList.push(await contract.methods.candidates(i).call());
+    }
+    console.log("Candidates List: ",candidatesList);
 
     // Update state with the result.
-    this.setState({ storageValue: response });
+    this.setState({ candidates:candidatesList });
   };
-
+  
   render() {
-    if (!this.state.web3) {
+    const {web3,accounts} = this.state
+    if (!web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
+        <h1>Voter Node Account: {accounts}</h1>
         <p>Your Truffle Box is installed and ready.</p>
         <h2>Smart Contract Example</h2>
         <p>
