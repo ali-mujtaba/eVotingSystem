@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
-import "./App.css";
+// import "./App.css";
 import CandidatesList from "./Components/CandidatesList";
+import VoteForm from "./Components/VoteForm";
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 class App extends Component {
   state = { candidates: [], web3: null, accounts: null, contract: null };
@@ -58,6 +61,14 @@ class App extends Component {
     this.setState({ candidates:candidatesList });
   };
   
+  castVote = (id)=>{
+    console.log("casting vote initiated");
+    console.log("id: ",id.target.value);
+    if(id.target.value!=="0"){
+      console.log("Good to go");
+
+    }
+  }
   render() {
     const {candidates,web3,accounts} = this.state
     if (!web3) {
@@ -65,10 +76,18 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <h1>Voter Node Account: {accounts}</h1>
-        <CandidatesList list={candidates} />
-      </div>
+      <Jumbotron fluid>
+        <Container>
+          <h1>Voter Node Account: {accounts}</h1>
+          <CandidatesList list={candidates} />
+          <VoteForm list={candidates} onVote={this.castVote}/>
+        </Container>
+      </Jumbotron>
+      // <Container fluid="md">
+      //   <h1>Voter Node Account: {accounts}</h1>
+      //   <CandidatesList list={candidates} />
+      //   <VoteForm list={candidates} onVote={this.castVote}/>
+      // </Container>
     );
   }
 }
