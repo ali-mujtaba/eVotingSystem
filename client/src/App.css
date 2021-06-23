@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  border: solid;
+  border-width: 2px;
+  border-color: #09d3ac;
+  max-width: fit-content;
 }
 
 .App-logo {
@@ -19,4 +23,15 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.candidate-list-container{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  border-color: aquamarine;
+}
+
+.candidate-info{
+  display: flex;
 }

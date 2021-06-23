@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
+import CandidatesList from "./Components/CandidatesList";
 
 class App extends Component {
   state = { candidates: [], web3: null, accounts: null, contract: null };
@@ -58,7 +59,7 @@ class App extends Component {
   };
   
   render() {
-    const {web3,accounts} = this.state
+    const {candidates,web3,accounts} = this.state
     if (!web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -66,16 +67,7 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Voter Node Account: {accounts}</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <CandidatesList list={candidates} />
       </div>
     );
   }
