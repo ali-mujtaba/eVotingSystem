@@ -61,14 +61,25 @@ class App extends Component {
     this.setState({ candidates:candidatesList });
   };
   
-  castVote = (id)=>{
-    console.log("casting vote initiated");
-    console.log("id: ",id.target.value);
-    if(id.target.value!=="0"){
-      console.log("Good to go");
+  castVote = async (obj)=>{
+    const { accounts, contract } = this.state;
 
+    console.log("casting vote initiated");
+    let candidateId = Number(obj.target.value);
+    console.log("id: ",candidateId);
+    if(candidateId>0){
+      contract.methods.vote(candidateId).send({ from: accounts[0] }).then(function(result) {
+        // Wait for votes to update
+        console.log(result);
+
+      }).catch(function(err) {
+        console.error(err);
+      });
+
+      console.log("casting vote completed.");
     }
-  }
+  };
+  
   render() {
     const {candidates,web3,accounts} = this.state
     if (!web3) {
