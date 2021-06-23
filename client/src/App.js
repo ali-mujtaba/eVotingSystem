@@ -45,6 +45,29 @@ class App extends Component {
     }
   };
 
+  bindEvents = async function() {
+    const {web3, contract,candidates,accounts} = this.state;
+    
+    console.log("Attaching listeners!");
+    console.log(contract);
+    contract.events.votedEvent({}, {
+      fromBlock: 'latest',
+      toBlock: 'latest'  
+    })
+    .on('data',function(event) {
+      console.log("event triggered", event)
+      // Reload when a new vote is recorded
+      let votedCandidateId = event.returnValues._candidateId
+      console.log(candidates);
+      let updatedCandidates = candidates.map((candidate)=>(candidate.id===votedCandidateId)? {...candidate, voteCount:candidate.voteCount+1} : candidate);
+      console.log("Updated Candidate List: ",updatedCandidates);
+      this.setState({ candidates:updatedCandidates});
+      this.forceUpdate();
+    }.bind(this));
+
+    console.log("listeners online!");
+  }
+
   runExample = async () => {
     const { accounts, contract } = this.state;
 
@@ -58,7 +81,7 @@ class App extends Component {
     console.log("Candidates List: ",candidatesList);
 
     // Update state with the result.
-    this.setState({ candidates:candidatesList });
+    this.setState({ candidates:candidatesList }, this.bindEvents);
   };
   
   castVote = async (obj)=>{
@@ -79,7 +102,7 @@ class App extends Component {
       console.log("casting vote completed.");
     }
   };
-  
+
   render() {
     const {candidates,web3,accounts} = this.state
     if (!web3) {
@@ -88,7 +111,7 @@ class App extends Component {
 
     return (
       <Jumbotron fluid>
-        <Container>
+        <Container fluid>
           <h1>Voter Node Account: {accounts}</h1>
           <CandidatesList list={candidates} />
           <VoteForm list={candidates} onVote={this.castVote}/>
