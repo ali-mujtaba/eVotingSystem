@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
-// import "./App.css";
 import CandidatesList from "./Components/CandidatesList";
 import VoteForm from "./Components/VoteForm";
 import Container from 'react-bootstrap/Container';
