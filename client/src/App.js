@@ -45,7 +45,7 @@ class App extends Component {
   };
 
   bindEvents = async function() {
-    const {web3, contract,candidates,accounts} = this.state;
+    const {contract,candidates} = this.state;
     
     console.log("Attaching listeners!");
     console.log(contract);
@@ -115,13 +115,13 @@ class App extends Component {
     }
 
     return (
-      <Jumbotron fluid>
-        <Container fluid>
-          <h1>Voter Node Account: {accounts}</h1>
+      <Container fluid>
+        <Jumbotron>
+          <h3 style={{fontSize:"3.5vw", fontWeight:"bold", textAlign:"center"}}>Voter Node Account: {accounts}</h3>
           <CandidatesList list={candidates} />
-          <VoteForm list={candidates} onVote={this.castVote}/>
-        </Container>
-      </Jumbotron>
+          <VoteForm list={candidates} onVote={this.castVote}/>        
+        </Jumbotron>
+      </Container>
       // <Container fluid="md">
       //   <h1>Voter Node Account: {accounts}</h1>
       //   <CandidatesList list={candidates} />
