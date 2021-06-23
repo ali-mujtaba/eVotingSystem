@@ -65,6 +65,12 @@ class App extends Component {
       this.forceUpdate();
     }.bind(this));
 
+    window.ethereum.on('accountsChanged',(accounts)=>{
+      console.log("Account Changed To: "+accounts[0]);
+      this.setState({ accounts});
+  
+    });
+  
     console.log("listeners online!");
   }
 
